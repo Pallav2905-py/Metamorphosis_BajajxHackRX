@@ -12,7 +12,7 @@
 sudo apt update && sudo apt upgrade -y
 
 # Install Python 3.10+ and pip
-sudo apt install python3 python3-pip python3-venv -y
+sudo apt install python3 python3-pip -y
 
 # Install system dependencies for document processing
 sudo apt install poppler-utils tesseract-ocr -y
@@ -20,14 +20,8 @@ sudo apt install poppler-utils tesseract-ocr -y
 # Navigate to your project directory
 cd ~/Metamorphosis_BajajxHackRX
 
-# Create virtual environment
-python3 -m venv .venv
-
-# Activate virtual environment
-source .venv/bin/activate
-
-# Install Python dependencies
-pip install -r requirements.txt
+# Install Python dependencies globally
+pip3 install -r requirements.txt
 ```
 
 ## Step 2: Configure Environment Variables
@@ -68,17 +62,14 @@ In AWS Console:
 
 ### Option A: Direct Run (for testing)
 ```bash
-# Activate virtual environment
-source .venv/bin/activate
-
 # Run the application
-python app.py
+python3 app.py
 ```
 
 ### Option B: Production with Gunicorn
 ```bash
 # Install Gunicorn
-pip install gunicorn
+pip3 install gunicorn
 
 # Run with Gunicorn
 gunicorn -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000 app:app
@@ -87,10 +78,10 @@ gunicorn -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000 app:app
 ### Option C: Background Process with nohup
 ```bash
 # Run in background
-nohup python app.py > app.log 2>&1 &
+nohup python3 app.py > app.log 2>&1 &
 
 # Check if running
-ps aux | grep python
+ps aux | grep python3
 ```
 
 ## Step 5: Access Your API
@@ -102,13 +93,24 @@ Your API will be available at:
 ## Step 6: Test the Deployment
 
 ```bash
-# Test from your local machine
+# Test from your local machine or directly on server
 curl -X POST "http://YOUR_EC2_PUBLIC_IP:8000/api/v1/hackrx/run" \
   -H "Content-Type: application/json" \
   -d '{
-    "documents": "https://example.com/document.pdf",
-    "questions": ["What is this document about?"]
+    "documents": "https://hackrx.blob.core.windows.net/assets/policy.pdf?sv=2023-01-03&st=2025-07-04T09%3A11%3A24Z&se=2027-07-05T09%3A11%3A00Z&sr=b&sp=r&sig=N4a9OU0w0QXO6AOIBiu4bpl7AXvEZogeT%2FjUHNO7HzQ%3D",
+    "questions": ["What is the grace period for premium payment?"]
   }'
+```
+
+## Quick Start Commands
+
+```bash
+# One-liner setup and run
+cd ~/Metamorphosis_BajajxHackRX && \
+sudo apt update && \
+sudo apt install python3 python3-pip poppler-utils tesseract-ocr -y && \
+pip3 install -r requirements.txt && \
+python3 app.py
 ```
 
 ## Troubleshooting
