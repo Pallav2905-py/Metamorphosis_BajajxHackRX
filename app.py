@@ -533,6 +533,10 @@ async def run_query(req: QueryRequest):
         logger.error(f"Critical error processing query: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/hello", response_model=QueryResponse)
+async def hello_world():
+    return QueryResponse(answers=["Hello, world!"])
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
