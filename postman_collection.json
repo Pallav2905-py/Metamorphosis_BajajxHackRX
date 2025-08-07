@@ -1,0 +1,214 @@
+{
+	"info": {
+		"_postman_id": "12345678-1234-1234-1234-123456789012",
+		"name": "BajajxHackRX Metamorphosis API",
+		"description": "LLM-powered contextual document QA with explainability API collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12345678"
+	},
+	"item": [
+		{
+			"name": "Document QA Query",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response has answers array\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('answers');",
+							"    pm.expect(jsonData.answers).to.be.an('array');",
+							"});",
+							"",
+							"pm.test(\"Each answer has required fields\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    jsonData.answers.forEach(function(answer) {",
+							"        pm.expect(answer).to.have.property('question');",
+							"        pm.expect(answer).to.have.property('answer');",
+							"        pm.expect(answer).to.have.property('rationale');",
+							"        pm.expect(answer).to.have.property('sources');",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"documents\": \"{{document_url}}\",\n    \"questions\": [\n        \"What is the grace period for premium payment under the National Parivar Mediclaim Plus Policy?\",\n        \"What is the waiting period for pre-existing diseases (PED) to be covered?\",\n        \"Does this policy cover maternity expenses, and what are the conditions?\",\n        \"What is the waiting period for cataract surgery?\",\n        \"Are the medical expenses for an organ donor covered under this policy?\",\n        \"What is the No Claim Discount (NCD) offered in this policy?\",\n        \"Is there a benefit for preventive health check-ups?\",\n        \"How does the policy define a 'Hospital'?\",\n        \"What is the extent of coverage for AYUSH treatments?\",\n        \"Are there any sub-limits on room rent and ICU charges for Plan A?\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/hackrx/run",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"hackrx",
+						"run"
+					]
+				},
+				"description": "Submit a document URL and a list of questions to get AI-powered answers with explanations and source citations.\n\n### Request Body\n- `documents`: URL to the document (PDF, DOC, DOCX, or email)\n- `questions`: Array of questions to ask about the document\n\n### Response\nReturns an array of answers, each containing:\n- `question`: The original question\n- `answer`: AI-generated answer\n- `rationale`: Explanation of how the answer was derived\n- `sources`: Relevant excerpts from the document"
+			},
+			"response": [
+				{
+					"name": "Successful Response",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer e42b276273760b26e40f63aaa4cfa6547b2b0f1decb43da39a89806ab29514c4",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"documents\": \"https://hackrx.blob.core.windows.net/assets/policy.pdf?sv=2023-01-03&st=2025-07-04T09%3A11%3A24Z&se=2027-07-05T09%3A11%3A00Z&sr=b&sp=r&sig=N4a9OU0w0QXO6AOIBiu4bpl7AXvEZogeT%2FjUHNO7HzQ%3D\",\n    \"questions\": [\n        \"What is the grace period for premium payment under the National Parivar Mediclaim Plus Policy?\",\n        \"What is the waiting period for pre-existing diseases (PED) to be covered?\",\n        \"Does this policy cover maternity expenses, and what are the conditions?\",\n        \"What is the waiting period for cataract surgery?\",\n        \"Are the medical expenses for an organ donor covered under this policy?\",\n        \"What is the No Claim Discount (NCD) offered in this policy?\",\n        \"Is there a benefit for preventive health check-ups?\",\n        \"How does the policy define a 'Hospital'?\",\n        \"What is the extent of coverage for AYUSH treatments?\",\n        \"Are there any sub-limits on room rent and ICU charges for Plan A?\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/hackrx/run",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hackrx",
+								"run"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "content-type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"answers\": [\n        {\n            \"question\": \"What is the grace period for premium payment under the National Parivar Mediclaim Plus Policy?\",\n            \"answer\": \"The grace period for premium payment is 30 days from the due date.\",\n            \"rationale\": \"Found explicit mention of grace period in the policy terms section.\",\n            \"sources\": [\n                \"Premium payments must be made within 30 days of the due date to maintain policy continuity.\"\n            ]\n        },\n        {\n            \"question\": \"What is the waiting period for pre-existing diseases (PED) to be covered?\",\n            \"answer\": \"Pre-existing diseases have a waiting period of 48 months.\",\n            \"rationale\": \"Policy clearly states waiting periods for different types of conditions.\",\n            \"sources\": [\n                \"Pre-existing diseases are covered after a waiting period of 48 months from policy inception.\"\n            ]\n        }\n    ]\n}"
+				},
+				{
+					"name": "Error Response",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer invalid_token",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"documents\": \"invalid_url\",\n    \"questions\": []\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/hackrx/run",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"hackrx",
+								"run"
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "content-type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"detail\": \"Failed to download document from URL: invalid_url\"\n}"
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "e42b276273760b26e40f63aaa4cfa6547b2b0f1decb43da39a89806ab29514c4",
+			"type": "string"
+		},
+		{
+			"key": "document_url",
+			"value": "https://hackrx.blob.core.windows.net/assets/policy.pdf?sv=2023-01-03&st=2025-07-04T09%3A11%3A24Z&se=2027-07-05T09%3A11%3A00Z&sr=b&sp=r&sig=N4a9OU0w0QXO6AOIBiu4bpl7AXvEZogeT%2FjUHNO7HzQ%3D",
+			"type": "string"
+		}
+	]
+}
